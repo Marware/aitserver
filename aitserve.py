@@ -75,12 +75,12 @@ async def get_log_handler(headers: dict) -> str:
     ips = []
     for c in reversed(channel_hits):
         html_text += f'\nTimestamp: {c["timestamp"]}\nIP: {c["ip"]}\nCountry: {c["country"]}\nUser Agent: {c["user_agent"]}\nMethod: {c["method"]}\n'
-        html_text += "--------------------------------------------------------------------------------------"
+        html_text += "\n--------------------------------------------------------------------------------------\n"
         ips.append(c["ip"])
 
     uniq_cnt = len(set(ips))
     html = ""
-    html += f"Viewership count: {len(channel_hits)} | Unique count: {uniq_cnt}\n"
+    html += f"Viewership count: {len(channel_hits)} | Unique count: {uniq_cnt}\n\n"
     html += html_text
 
     return html
