@@ -74,7 +74,7 @@ async def get_log_handler(headers: dict) -> str:
 
     ips = []
     for c in reversed(channel_hits):
-        html_text += f'Timestamp: {c["timestamp"]}\nIP: {c["ip"]}\nCountry: {c["country"]}\nUser Agent: {c["user_agent"]}\nMethod: {c["method"]}\n'
+        html_text += f'\nTimestamp: {c["timestamp"]}\nIP: {c["ip"]}\nCountry: {c["country"]}\nUser Agent: {c["user_agent"]}\nMethod: {c["method"]}\n'
         html_text += "--------------------------------------------------------------------------------------"
         ips.append(c["ip"])
 
