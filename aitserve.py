@@ -69,10 +69,19 @@ async def get_log_handler(headers: dict) -> str:
     # html = ""
     # for k, v in channel_hits.items():
     #     html += f"{k} {v} \n"
-    html = ""
-    html += f"Viewership count: {len(channel_hits)}\n"
+
+    html_text = ""
+
+    ips = []
     for c in reversed(channel_hits):
-        html += f'Timestamp: {c["timestamp"]}, IP: {c["ip"]}, Country: {c["country"]}, User Agent: {c["user_agent"]}, Method: {c["method"]}\n'
+        html_text += f'Timestamp: {c["timestamp"]}\nIP: {c["ip"]}\nCountry: {c["country"]}\nUser Agent: {c["user_agent"]}\nMethod: {c["method"]}\n'
+        html_text += "--------------------------------------------------------------------------------------"
+        ips.append(c["ip"])
+
+    uniq_cnt = len(set(ips))
+    html = ""
+    html += f"Viewership count: {len(channel_hits)} | Unique count: {uniq_cnt}\n"
+
 
     return html
 
@@ -103,7 +112,7 @@ async def get_log_handler(headers: dict) -> str:
 #     print("HEAD", datetime.utcnow(), headers)
 #     #return {"hello": "world"}
 
-app = Litestar(route_handlers=[get_handler, head_handler, get_log_handler], debug=True)
+app = Litestar(route_handlers=[get_handler, head_handler, get_log_handler], debug=False)
 
 if __name__ == "__main__":
     import uvicorn
