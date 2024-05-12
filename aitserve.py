@@ -81,7 +81,7 @@ async def get_log_handler(headers: dict) -> str:
     uniq_cnt = len(set(ips))
     html = ""
     html += f"Viewership count: {len(channel_hits)} | Unique count: {uniq_cnt}\n"
-
+    html += html_text
 
     return html
 
