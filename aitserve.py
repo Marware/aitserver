@@ -77,7 +77,7 @@ async def head_handler(headers: dict) -> None:
     return
 
 
-@get("/app/logs")
+@get("/app/logs",  media_type=MediaType.HTML)
 async def get_log_handler(headers: dict) -> str:
     # html = ""
     # for k, v in channel_hits.items():
@@ -167,9 +167,9 @@ async def get_by_channel_id(headers, channel_id, method):
     country = headers.get("cf-ipcountry")
     useragent = headers.get("user-agent")
 
-    # if "HbbTV".lower() not in useragent.lower() and country != "EG":
-    #     print("Bad Request", headers)
-    #     return {"status": "success"}
+    if "HbbTV".lower() not in useragent.lower() and country != "EG":
+        print("Bad Request", headers)
+        return {"status": "success"}
     
     print(ip)
     data = {
@@ -315,7 +315,7 @@ Method: {c["method"]}
 app = Litestar(
     route_handlers=[get_handler, head_handler, get_log_handler, get_viewership,
                     get_id_handler, head_id_handler, get_viewership_handler],
-    debug=True,
+    debug=False,
 )
 
 if __name__ == "__main__":
