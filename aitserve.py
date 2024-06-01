@@ -1,4 +1,4 @@
-from litestar import Litestar, get, head
+from litestar import Litestar, get, head, MediaType
 from datetime import datetime
 from typing import Any
 import json
@@ -83,18 +83,67 @@ async def get_log_handler(headers: dict) -> str:
     # for k, v in channel_hits.items():
     #     html += f"{k} {v} \n"
 
-    html_text = ""
+    # HTML structure for the response
+    html = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Viewership Logs</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .container { max-width: 800px; margin: auto; }
+            .header { background-color: #f4f4f4; padding: 10px; border-radius: 5px; text-align: center; }
+            .log-entry { border-bottom: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+            .log-entry:last-child { border-bottom: none; }
+            .title { font-size: 1.2em; font-weight: bold; }
+            .subtitle { color: #555; }
+            .log-entry pre { background-color: #f9f9f9; padding: 10px; border-radius: 5px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Viewership Logs</h1>
+            </div>
+            <div class="content">
+    """
 
-    ips = []
+    html += f'<div class="title">AVAFAMILY | Viewership count: {len(channel_hits)} | Unique count: {len(set(c["ip"] for c in channel_hits))}</div>'
+
     for c in reversed(channel_hits):
-        html_text += f'\nTimestamp: {c["timestamp"]}\nIP: {c["ip"]}\nCountry: {c["country"]}\nUser Agent: {c["user_agent"]}\nMethod: {c["method"]}\n'
-        html_text += "\n--------------------------------------------------------------------------------------\n"
-        ips.append(c["ip"])
+        html += f'''
+        <div class="log-entry">
+            <div class="subtitle">Timestamp: {c["timestamp"]}</div>
+            <pre>
+IP: {c["ip"]}
+Country: {c["country"]}
+User Agent: {c["user_agent"]}
+Method: {c["method"]}
+            </pre>
+        </div>
+        '''
+    
+    html += """
+            </div>
+        </div>
+    </body>
+    </html>
+    """
 
-    uniq_cnt = len(set(ips))
-    html = ""
-    html += f"Viewership count: {len(channel_hits)} | Unique count: {uniq_cnt}\n\n"
-    html += html_text
+    # html_text = ""
+
+    # ips = []
+    # for c in reversed(channel_hits):
+    #     html_text += f'\nTimestamp: {c["timestamp"]}\nIP: {c["ip"]}\nCountry: {c["country"]}\nUser Agent: {c["user_agent"]}\nMethod: {c["method"]}\n'
+    #     html_text += "\n--------------------------------------------------------------------------------------\n"
+    #     ips.append(c["ip"])
+
+    # uniq_cnt = len(set(ips))
+    # html = ""
+    # html += f"Viewership count: {len(channel_hits)} | Unique count: {uniq_cnt}\n\n"
+    # html += html_text
 
     return html
 
@@ -118,9 +167,9 @@ async def get_by_channel_id(headers, channel_id, method):
     country = headers.get("cf-ipcountry")
     useragent = headers.get("user-agent")
 
-    if "HbbTV".lower() not in useragent.lower() and country != "EG":
-        print("Bad Request", headers)
-        return {"status": "success"}
+    # if "HbbTV".lower() not in useragent.lower() and country != "EG":
+    #     print("Bad Request", headers)
+    #     return {"status": "success"}
     
     print(ip)
     data = {
@@ -156,29 +205,85 @@ async def head_id_handler(headers: dict, channel_id: str = None) -> None:
 
     return 
 
-@get("/app/viewership/{channel_id:str}")
-async def get_viewership_handler(headers: dict, channel_id: str = None)-> dict[str, str]:
-    # html = ""
-    # for k, v in channel_hits.items():
-    #     html += f"{k} {v} \n"
-
+@get("/app/viewership/{channel_id:str}",  media_type=MediaType.HTML)
+async def get_viewership_handler(headers: dict, channel_id: str = None) -> dict[str, str]:
+    #print(id_channel_hits)
     if channel_id is None or id_channel_hits.get(channel_id) is None:
         return {"status": "success"}
     
-    html_text = ""
+    # HTML structure for the response
+    html = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Viewership Logs</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .container { max-width: 800px; margin: auto; }
+            .header { background-color: #f4f4f4; padding: 10px; border-radius: 5px; text-align: center; }
+            .log-entry { border-bottom: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+            .log-entry:last-child { border-bottom: none; }
+            .title { font-size: 1.2em; font-weight: bold; }
+            .subtitle { color: #555; }
+            .log-entry pre { background-color: #f9f9f9; padding: 10px; border-radius: 5px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Viewership Logs</h1>
+            </div>
+            <div class="content">
+    """
 
-    ips = []
+    html += f'<div class="title">{channels_ids[channel_id]} | Viewership count: {len(id_channel_hits[channel_id])} | Unique count: {len(set(c["ip"] for c in id_channel_hits[channel_id]))}</div>'
+
     for c in reversed(id_channel_hits[channel_id]):
-        html_text += f'\nTimestamp: {c["timestamp"]}\nIP: {c["ip"]}\nCountry: {c["country"]}\nUser Agent: {c["user_agent"]}\nMethod: {c["method"]}\n'
-        html_text += "\n--------------------------------------------------------------------------------------\n"
-        ips.append(c["ip"])
-
-    uniq_cnt = 1 #len(ips)
-    html = ""
-    html += f"{channels_ids[channel_id]} | Viewership count: {len(id_channel_hits[channel_id])} | Unique count: {uniq_cnt}\n\n"
-    html += html_text
+        html += f'''
+        <div class="log-entry">
+            <div class="subtitle">Timestamp: {c["timestamp"]}</div>
+            <pre>
+IP: {c["ip"]}
+Country: {c["country"]}
+User Agent: {c["user_agent"]}
+Method: {c["method"]}
+            </pre>
+        </div>
+        '''
+    
+    html += """
+            </div>
+        </div>
+    </body>
+    </html>
+    """
 
     return html
+
+# async def get_viewership_handler(headers: dict, channel_id: str = None)-> dict[str, str]:
+#     # html = ""
+#     # for k, v in channel_hits.items():
+#     #     html += f"{k} {v} \n"
+
+#     if channel_id is None or id_channel_hits.get(channel_id) is None:
+#         return {"status": "success"}
+    
+#     html_text = ""
+
+#     ips = []
+#     for c in reversed(id_channel_hits[channel_id]):
+#         html_text += f'\nTimestamp: {c["timestamp"]}\nIP: {c["ip"]}\nCountry: {c["country"]}\nUser Agent: {c["user_agent"]}\nMethod: {c["method"]}\n'
+#         html_text += "\n--------------------------------------------------------------------------------------\n"
+#         ips.append(c["ip"])
+
+#     uniq_cnt = 1 #len(ips)
+#     html = ""
+#     html += f"{channels_ids[channel_id]} | Viewership count: {len(id_channel_hits[channel_id])} | Unique count: {uniq_cnt}\n\n"
+#     html += html_text
+
+#     return html
 
 # @get("/app/{channel_id:str}")
 # async def get_handler(headers: dict, channel_id: str = None) -> dict[str, str]:
