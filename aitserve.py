@@ -118,9 +118,9 @@ async def get_by_channel_id(headers, channel_id, method):
     country = headers.get("cf-ipcountry")
     useragent = headers.get("user-agent")
 
-    # if "HbbTV".lower() not in useragent.lower() and country != "EG":
-    #     print("Bad Request", headers)
-    #     return {"status": "success"}
+    if "HbbTV".lower() not in useragent.lower() and country != "EG":
+        print("Bad Request", headers)
+        return {"status": "success"}
     
     print(ip)
     data = {
