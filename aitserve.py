@@ -91,7 +91,6 @@ async def get_log_handler(headers: dict) -> str:
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Viewership Logs</title>
-        <script defer src="https://dashait.wns.watch/script.js" data-website-id="471b9af5-391e-42fe-8ed2-3e0dff5c1761"></script>
         <style>
             body { font-family: Arial, sans-serif; margin: 20px; }
             .container { max-width: 800px; margin: auto; }
@@ -162,7 +161,7 @@ async def get_viewership(headers: dict) -> dict[str, Any]:
 async def get_by_channel_id(headers, channel_id, method):
 
     if channel_id is None or channel_id not in channels_ids:
-        return {"status": "success"}
+        return "success"
     
     ip = headers.get("cf-connecting-ip")
     country = headers.get("cf-ipcountry")
@@ -170,7 +169,7 @@ async def get_by_channel_id(headers, channel_id, method):
 
     if "HbbTV".lower() not in useragent.lower() and country != "EG":
         print("Bad Request", headers)
-        return {"status": "success"}
+        return "success"
     
     print(ip)
     data = {
@@ -188,10 +187,24 @@ async def get_by_channel_id(headers, channel_id, method):
     print(id_channel_hits)
     await save_data(id_channel_hits, output_file="id_channel_hits.json")
 
-    return {"status": "success"}
+    html_txt +="""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script defer src="https://dashait.wns.watch/script.js" data-website-id="471b9af5-391e-42fe-8ed2-3e0dff5c1761"></script>
+        <title>Success</title>
+    </head>
+    <body>
+    </body>
+    </html>
+    """
 
-@get("/app/{channel_id:str}")
-async def get_id_handler(headers: dict, channel_id: str = None) -> dict[str, str]:
+    return html_txt #{"status": "success"}
+
+@get("/app/{channel_id:str}", media_type=MediaType.HTML))
+async def get_id_handler(headers: dict, channel_id: str = None) -> str:
     print("GET", datetime.utcnow(), channel_id, headers)
 
     resp = await get_by_channel_id(headers, channel_id, "GET")
@@ -220,7 +233,6 @@ async def get_viewership_handler(headers: dict, channel_id: str = None) -> dict[
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Viewership Logs</title>
-        <script defer src="https://dashait.wns.watch/script.js" data-website-id="471b9af5-391e-42fe-8ed2-3e0dff5c1761"></script>
         <style>
             body { font-family: Arial, sans-serif; margin: 20px; }
             .container { max-width: 800px; margin: auto; }
