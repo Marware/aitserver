@@ -4,6 +4,7 @@ from typing import Any
 import json
 import requests
 from litestar.response import Redirect
+from litestar.status_codes import HTTP_302_FOUND
 # 2024-05-12 14:23:15.300767 {'host': 'tait.wns.watch', 'accept-encoding': 'gzip, br', 'cf-ray': '882b10c8791f2bc1-FRA', 'x-forwarded-proto': 'https', 'cf-visitor': '{"scheme":"https"}', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36 HbbTV/1.5.1 (+DRM; LGE; 75UP81003LR; WEBOS6.0 03.40.82; W60_K7LP; DTV_W21P;)', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9', 'sec-fetch-site': 'cross-site', 'sec-fetch-mode': 'navigate', 'accept-language': 'en-GB,en', 'cf-connecting-ip': '5.232.194.253', 'cdn-loop': 'cloudflare', 'cf-ipcountry': 'IR', 'x-forwarded-for': '5.232.194.253', 'x-forwarded-host': 'tait.wns.watch', 'x-forwarded-server': 'tait.wns.watch', 'connection': 'Keep-Alive'}
 
 channel_hits = None
@@ -236,14 +237,14 @@ async def get_id_handler(headers: dict, channel_id: str = None) -> dict[str, str
 
     return resp
 
-@head("/app/{channel_id:str}",  media_type=MediaType.HTML)
+@head("/app/{channel_id:str}",  status_code=HTTP_302_FOUND))
 async def head_id_handler(headers: dict, channel_id: str = None) -> None:
     print("HEAD", datetime.utcnow(), channel_id, headers)
 
     #resp = await get_by_channel_id(headers, channel_id, "HEAD")
-    r = requests.get(url=f"https://tait.wns.watch/app/{channel_id}", headers=headers)
-    print(r.ok, r.text(), r.status_code)
-    return # Redirect(path="/sstracker")
+    #r = requests.get(url=f"https://tait.wns.watch/app/{channel_id}", headers=headers)
+    #print(r.ok, r.text(), r.status_code)
+    return Redirect(path="/sstracker")
 
 @get("/app/viewership/{channel_id:str}",  media_type=MediaType.HTML)
 async def get_viewership_handler(headers: dict, channel_id: str = None) -> dict[str, str]:
