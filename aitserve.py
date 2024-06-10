@@ -227,8 +227,8 @@ async def get_by_channel_id(headers, channel_id, method):
 
     return {"status": "success"}
 
-@get("/app/{channel_id:str}", media_type=MediaType.HTML)
-async def get_id_handler(headers: dict, channel_id: str = None) -> str:
+@get("/app/{channel_id:str}")
+async def get_id_handler(headers: dict, channel_id: str = None) -> dict[str, str]:
     print("GET", datetime.utcnow(), channel_id, headers)
 
     resp = await get_by_channel_id(headers, channel_id, "GET")
