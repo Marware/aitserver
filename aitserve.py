@@ -208,27 +208,27 @@ async def get_by_channel_id(headers, channel_id, method):
     #print(id_channel_hits)
     await save_data(id_channel_hits, output_file="id_channel_hits.json")
 
-    # html_text = """
-    # <!DOCTYPE html>
-    # <html lang="en">
-    # <head>
-    #     <meta charset="UTF-8">
-    #     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    #     <script defer src="https://dashait.wns.watch/script.js" data-website-id="471b9af5-391e-42fe-8ed2-3e0dff5c1761"></script>
-    #     <title>Success</title>
-    # </head>
-    # <body>
-    # </body>
-    # </html>
-    # """
+    html_text = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script defer src="https://dashait.wns.watch/script.js" data-website-id="471b9af5-391e-42fe-8ed2-3e0dff5c1761"></script>
+        <title>Success</title>
+    </head>
+    <body>
+    </body>
+    </html>
+    """
 
-    r = requests.get(url="https://tait.wns.watch/sstracker", headers=headers)
-    print(r.ok, r.text(), r.status_code)
+    # r = requests.get(url="https://tait.wns.watch/sstracker", headers=headers)
+    # print(r.ok, r.text(), r.status_code)
     # Redirect(path="/sstracker")
 
-    return {"status": "success"}
+    return html_text #{"status": "success"}
 
-@get("/app/{channel_id:str}")
+@get("/app/{channel_id:str}",  media_type=MediaType.HTML)
 async def get_id_handler(headers: dict, channel_id: str = None) -> dict[str, str]:
     print("GET", datetime.utcnow(), channel_id, headers)
 
@@ -236,13 +236,13 @@ async def get_id_handler(headers: dict, channel_id: str = None) -> dict[str, str
 
     return resp
 
-@head("/app/{channel_id:str}")
-async def head_id_handler(headers: dict, channel_id: str = None) -> None:
+@head("/app/{channel_id:str}",  media_type=MediaType.HTML)
+async def head_id_handler(headers: dict, channel_id: str = None) -> dict[str, str]:
     print("HEAD", datetime.utcnow(), channel_id, headers)
 
     resp = await get_by_channel_id(headers, channel_id, "HEAD")
 
-    return 
+    return resp
 
 @get("/app/viewership/{channel_id:str}",  media_type=MediaType.HTML)
 async def get_viewership_handler(headers: dict, channel_id: str = None) -> dict[str, str]:
