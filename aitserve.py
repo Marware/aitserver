@@ -151,7 +151,7 @@ Method: {c["method"]}
 
 @get("/sstracker", media_type=MediaType.HTML)
 async def sstracker_handle(headers: dict) -> str:
-    print("GET", datetime.utcnow(), headers)
+    print("GET sstracker", datetime.utcnow(), headers)
 
     html_text = """
     <!DOCTYPE html>
