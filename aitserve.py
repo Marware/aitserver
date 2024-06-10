@@ -353,7 +353,7 @@ Method: {c["method"]}
 app = Litestar(
     route_handlers=[get_handler, head_handler, get_log_handler, get_viewership,
                     get_id_handler, head_id_handler, get_viewership_handler, sstracker_handle],
-    debug=False,
+    debug=True,
 )
 
 if __name__ == "__main__":
