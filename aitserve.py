@@ -184,7 +184,7 @@ async def get_by_channel_id(headers, channel_id, method):
         id_channel_hits[channel_id] = []
 
     id_channel_hits[channel_id].append(data)
-    print(id_channel_hits)
+    #print(id_channel_hits)
     await save_data(id_channel_hits, output_file="id_channel_hits.json")
 
     html_txt +="""
