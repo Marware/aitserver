@@ -223,6 +223,7 @@ async def get_by_channel_id(headers, channel_id, method):
     # """
 
     r = requests.get(url="https://tait.wns.watch/sstracker", headers=headers)
+    print(r.ok, r.text(), r.status_code)
     # Redirect(path="/sstracker")
 
     return {"status": "success"}
