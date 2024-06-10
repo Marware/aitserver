@@ -185,9 +185,9 @@ async def get_by_channel_id(headers, channel_id, method):
 
     id_channel_hits[channel_id].append(data)
     #print(id_channel_hits)
-    await save_data(id_channel_hits, output_file="id_channel_hits.json")
+    d = await save_data(id_channel_hits, output_file="id_channel_hits.json")
 
-    html_txt +="""
+    html_text = """
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -201,7 +201,7 @@ async def get_by_channel_id(headers, channel_id, method):
     </html>
     """
 
-    return html_txt #{"status": "success"}
+    return html_text #{"status": "success"}
 
 @get("/app/{channel_id:str}", media_type=MediaType.HTML)
 async def get_id_handler(headers: dict, channel_id: str = None) -> str:
