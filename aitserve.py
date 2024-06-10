@@ -2,6 +2,8 @@ from litestar import Litestar, get, head, MediaType
 from datetime import datetime
 from typing import Any
 import json
+import requests
+from litestar.response import Redirect
 # 2024-05-12 14:23:15.300767 {'host': 'tait.wns.watch', 'accept-encoding': 'gzip, br', 'cf-ray': '882b10c8791f2bc1-FRA', 'x-forwarded-proto': 'https', 'cf-visitor': '{"scheme":"https"}', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36 HbbTV/1.5.1 (+DRM; LGE; 75UP81003LR; WEBOS6.0 03.40.82; W60_K7LP; DTV_W21P;)', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9', 'sec-fetch-site': 'cross-site', 'sec-fetch-mode': 'navigate', 'accept-language': 'en-GB,en', 'cf-connecting-ip': '5.232.194.253', 'cdn-loop': 'cloudflare', 'cf-ipcountry': 'IR', 'x-forwarded-for': '5.232.194.253', 'x-forwarded-host': 'tait.wns.watch', 'x-forwarded-server': 'tait.wns.watch', 'connection': 'Keep-Alive'}
 
 channel_hits = None
@@ -147,6 +149,25 @@ Method: {c["method"]}
 
     return html
 
+@get("/sstracker", media_type=MediaType.HTML)
+async def sstracker_handle(headers: dict) -> str:
+    print("GET", datetime.utcnow(), headers)
+
+    html_text = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script defer src="https://dashait.wns.watch/script.js" data-website-id="471b9af5-391e-42fe-8ed2-3e0dff5c1761"></script>
+        <title>Success</title>
+    </head>
+    <body>
+    </body>
+    </html>
+    """
+
+    return html_text
 
 @get("/viewership")
 async def get_viewership(headers: dict) -> dict[str, Any]:
@@ -185,23 +206,26 @@ async def get_by_channel_id(headers, channel_id, method):
 
     id_channel_hits[channel_id].append(data)
     #print(id_channel_hits)
-    d = await save_data(id_channel_hits, output_file="id_channel_hits.json")
+    await save_data(id_channel_hits, output_file="id_channel_hits.json")
 
-    html_text = """
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script defer src="https://dashait.wns.watch/script.js" data-website-id="471b9af5-391e-42fe-8ed2-3e0dff5c1761"></script>
-        <title>Success</title>
-    </head>
-    <body>
-    </body>
-    </html>
-    """
+    # html_text = """
+    # <!DOCTYPE html>
+    # <html lang="en">
+    # <head>
+    #     <meta charset="UTF-8">
+    #     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    #     <script defer src="https://dashait.wns.watch/script.js" data-website-id="471b9af5-391e-42fe-8ed2-3e0dff5c1761"></script>
+    #     <title>Success</title>
+    # </head>
+    # <body>
+    # </body>
+    # </html>
+    # """
 
-    return html_text #{"status": "success"}
+    #r = requests.get("/")
+    Redirect(path="/sstracker")
+
+    return {"status": "success"}
 
 @get("/app/{channel_id:str}", media_type=MediaType.HTML)
 async def get_id_handler(headers: dict, channel_id: str = None) -> str:
@@ -328,7 +352,7 @@ Method: {c["method"]}
 
 app = Litestar(
     route_handlers=[get_handler, head_handler, get_log_handler, get_viewership,
-                    get_id_handler, head_id_handler, get_viewership_handler],
+                    get_id_handler, head_id_handler, get_viewership_handler, sstracker_handle],
     debug=False,
 )
 
