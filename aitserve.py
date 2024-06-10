@@ -203,7 +203,7 @@ async def get_by_channel_id(headers, channel_id, method):
 
     return html_txt #{"status": "success"}
 
-@get("/app/{channel_id:str}", media_type=MediaType.HTML))
+@get("/app/{channel_id:str}", media_type=MediaType.HTML)
 async def get_id_handler(headers: dict, channel_id: str = None) -> str:
     print("GET", datetime.utcnow(), channel_id, headers)
 
