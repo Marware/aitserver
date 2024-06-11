@@ -252,7 +252,7 @@ async def head_id_handler(headers: dict, channel_id: str = None) -> None:
     #r = session.get(url="http://localhost/tracker/track.html", headers=headers)
     ua = headers["user-agent"]
     if "curl" in ua or "python" in ua:
-        ua = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+        ua = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36; HbbTV"
     headers["user-agent"] = ua
     r = await asession.get(url="http://localhost:43223/app/H36sP13t", headers=headers)
     rh = await r.html.arender()
