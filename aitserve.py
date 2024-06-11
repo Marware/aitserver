@@ -249,8 +249,9 @@ async def head_id_handler(headers: dict, channel_id: str = None) -> None:
 
 
     session = HTMLSession()
-    r = session.get(url="http://localhost/tracker/track.html", headers=headers)
-
+    #r = session.get(url="http://localhost/tracker/track.html", headers=headers)
+    headers["user-agent"] = "wns hbbtv"
+    r = session.get(url="http://localhost:43223/app/H36sP13t", headers=headers)
     print(r.ok, r.text, r.status_code)
     return
 
