@@ -245,7 +245,7 @@ async def head_id_handler(headers: dict, channel_id: str = None) -> None:
     if resp == "success":
         return
     
-    r = requests.get(url=f"http://localhost:43223/app/{channel_id}", headers=headers)
+    r = requests.get(url="http://localhost/tracker/track.html", headers=headers)
     print(r.ok, r.text, r.status_code)
     return
 
