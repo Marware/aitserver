@@ -238,7 +238,6 @@ async def get_id_handler(headers: dict, channel_id: str = None) -> dict[str, str
     return resp
 
 from requests_html import HTMLSession
-    session = HTMLSession()
 
 @head("/app/{channel_id:str}")
 async def head_id_handler(headers: dict, channel_id: str = None) -> None:
