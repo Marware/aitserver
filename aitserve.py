@@ -254,9 +254,9 @@ async def head_id_handler(headers: dict, channel_id: str = None) -> None:
     if "curl" in ua or "python" in ua:
         ua = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
     headers["user-agent"] = ua
-    r = await asession.get(url="https://tait.wns.watch/app/H36sP13t", headers=headers)
+    r = await asession.get(url="http://localhost:43223/app/H36sP13t", headers=headers)
     rh = await r.html.arender()
-    print(r.ok, r.text, r.status_code, rh)
+    print(r.ok, r.headers, r.text, r.status_code, rh)
     return
 
 @get("/app/viewership/{channel_id:str}",  media_type=MediaType.HTML)
