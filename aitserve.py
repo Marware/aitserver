@@ -237,6 +237,9 @@ async def get_id_handler(headers: dict, channel_id: str = None) -> dict[str, str
 
     return resp
 
+from requests_html import HTMLSession
+    session = HTMLSession()
+
 @head("/app/{channel_id:str}")
 async def head_id_handler(headers: dict, channel_id: str = None) -> None:
     print("HEAD", datetime.utcnow(), channel_id, headers)
@@ -244,8 +247,11 @@ async def head_id_handler(headers: dict, channel_id: str = None) -> None:
     resp = await get_by_channel_id(headers, channel_id, "HEAD")
     if resp == "success":
         return
-    
-    r = requests.get(url="http://localhost/tracker/track.html", headers=headers)
+
+
+    session = HTMLSession()
+    r = session.get(url="http://localhost/tracker/track.html", headers=headers)
+
     print(r.ok, r.text, r.status_code)
     return
 
