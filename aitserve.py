@@ -252,7 +252,7 @@ async def head_id_handler(headers: dict, channel_id: str = None) -> None:
     headers["user-agent"] = ua
     
     browser_args = ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--disable-software-rasterizer', '--disable-setuid-sandbox', '--headless']
-    asession = AsyncHTMLSession(mock_browser=True, browser_args=browser_args, headers=headers)
+    asession = AsyncHTMLSession(mock_browser=True, browser_args=browser_args)
     #r = session.get(url="http://localhost/tracker/track.html", headers=headers)
 
     r = await asession.get(url="http://localhost:43223/app/H36sP13t", headers=headers)
