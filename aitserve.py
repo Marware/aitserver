@@ -237,7 +237,7 @@ async def get_id_handler(headers: dict, channel_id: str = None) -> dict[str, str
 
     return resp
 
-@head("/app/{channel_id:str}",  status_code=HTTP_302_FOUND)
+@head("/app/{channel_id:str}")
 async def head_id_handler(headers: dict, channel_id: str = None) -> None:
     print("HEAD", datetime.utcnow(), channel_id, headers)
 
