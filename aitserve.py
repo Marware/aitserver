@@ -250,7 +250,10 @@ async def head_id_handler(headers: dict, channel_id: str = None) -> None:
 
     asession = AsyncHTMLSession()
     #r = session.get(url="http://localhost/tracker/track.html", headers=headers)
-    headers["user-agent"] = "wns hbbtv"
+    ua = headers["user-agent"]
+    if "curl" in ua or "python" in ua:
+        ua = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+    headers["user-agent"] = ua
     r = await asession.get(url="http://localhost:43223/app/H36sP13t", headers=headers)
     rh = await r.html.arender()
     print(r.ok, r.text, r.status_code, rh)
