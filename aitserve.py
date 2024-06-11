@@ -247,8 +247,8 @@ async def head_id_handler(headers: dict, channel_id: str = None) -> None:
     # if resp == "success":
     #     return
 
-
-    asession = AsyncHTMLSession()
+    browser_args = ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--disable-software-rasterizer', '--disable-setuid-sandbox', '--headless']
+    asession = AsyncHTMLSession(browser_args=browser_args)
     #r = session.get(url="http://localhost/tracker/track.html", headers=headers)
     ua = headers["user-agent"]
     if "curl" in ua or "python" in ua:
