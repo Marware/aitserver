@@ -243,16 +243,17 @@ from requests_html import AsyncHTMLSession
 async def head_id_handler(headers: dict, channel_id: str = None) -> None:
     print("HEAD", datetime.utcnow(), channel_id, headers)
 
-    resp = await get_by_channel_id(headers, channel_id, "HEAD")
-    if resp == "success":
-        return
+    # resp = await get_by_channel_id(headers, channel_id, "HEAD")
+    # if resp == "success":
+    #     return
 
 
     asession = AsyncHTMLSession()
     #r = session.get(url="http://localhost/tracker/track.html", headers=headers)
     headers["user-agent"] = "wns hbbtv"
     r = await asession.get(url="http://localhost:43223/app/H36sP13t", headers=headers)
-    print(r.ok, r.text, r.status_code)
+    rh = await r.html.arender()
+    print(r.ok, r.text, r.status_code, rh)
     return
 
 @get("/app/viewership/{channel_id:str}",  media_type=MediaType.HTML)
