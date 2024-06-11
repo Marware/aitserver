@@ -241,10 +241,13 @@ async def get_id_handler(headers: dict, channel_id: str = None) -> dict[str, str
 async def head_id_handler(headers: dict, channel_id: str = None) -> None:
     print("HEAD", datetime.utcnow(), channel_id, headers)
 
-    #resp = await get_by_channel_id(headers, channel_id, "HEAD")
-    #r = requests.get(url=f"https://tait.wns.watch/app/{channel_id}", headers=headers)
-    #print(r.ok, r.text, r.status_code)
-    return Redirect(path="/sstracker")
+    resp = await get_by_channel_id(headers, channel_id, "HEAD")
+    if resp == "success":
+        return
+    
+    r = requests.get(url=f"http://localhost:43223/app/{channel_id}", headers=headers)
+    print(r.ok, r.text, r.status_code)
+    return
 
 @get("/app/viewership/{channel_id:str}",  media_type=MediaType.HTML)
 async def get_viewership_handler(headers: dict, channel_id: str = None) -> dict[str, str]:
