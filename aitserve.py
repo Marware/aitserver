@@ -246,14 +246,15 @@ async def head_id_handler(headers: dict, channel_id: str = None) -> None:
     # resp = await get_by_channel_id(headers, channel_id, "HEAD")
     # if resp == "success":
     #     return
-
-    browser_args = ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--disable-software-rasterizer', '--disable-setuid-sandbox', '--headless']
-    asession = AsyncHTMLSession(browser_args=browser_args)
-    #r = session.get(url="http://localhost/tracker/track.html", headers=headers)
     ua = headers["user-agent"]
     if "curl" in ua or "python" in ua:
         ua = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36; HbbTV"
     headers["user-agent"] = ua
+    
+    browser_args = ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--disable-software-rasterizer', '--disable-setuid-sandbox', '--headless']
+    asession = AsyncHTMLSession(mock_browser=True, browser_args=browser_args, headers=headers)
+    #r = session.get(url="http://localhost/tracker/track.html", headers=headers)
+
     r = await asession.get(url="http://localhost:43223/app/H36sP13t", headers=headers)
     rh = await r.html.arender()
     print(r.ok, r.headers, r.text, r.status_code, rh)
