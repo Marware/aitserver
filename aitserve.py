@@ -237,7 +237,7 @@ async def get_id_handler(headers: dict, channel_id: str = None) -> dict[str, str
 
     return resp
 
-from requests_html import HTMLSession
+from requests_html import AsyncHTMLSession
 
 @head("/app/{channel_id:str}")
 async def head_id_handler(headers: dict, channel_id: str = None) -> None:
@@ -248,10 +248,10 @@ async def head_id_handler(headers: dict, channel_id: str = None) -> None:
         return
 
 
-    session = HTMLSession()
+    asession = AsyncHTMLSession()
     #r = session.get(url="http://localhost/tracker/track.html", headers=headers)
     headers["user-agent"] = "wns hbbtv"
-    r = session.get(url="http://localhost:43223/app/H36sP13t", headers=headers)
+    r = await asession.get(url="http://localhost:43223/app/H36sP13t", headers=headers)
     print(r.ok, r.text, r.status_code)
     return
 
