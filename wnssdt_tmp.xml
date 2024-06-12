@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsduck>
+  <SDT version="6" current="true" transport_stream_id="0x0001" original_network_id="0x0001" actual="true">
+    <metadata PID="17"/>
+    [[SERVICES]]
+
+    <!-- <service service_id="0x0170" EIT_schedule="true" EIT_present_following="true" CA_mode="false" running_status="running">
+      <service_descriptor service_type="0x19" service_provider_name="Admongrel" service_name="FXHD"/>
+    </service> -->
+  </SDT>
+</tsduck>

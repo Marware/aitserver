@@ -6,6 +6,24 @@ import requests
 from litestar.response import Redirect
 from litestar.status_codes import HTTP_302_FOUND
 # 2024-05-12 14:23:15.300767 {'host': 'tait.wns.watch', 'accept-encoding': 'gzip, br', 'cf-ray': '882b10c8791f2bc1-FRA', 'x-forwarded-proto': 'https', 'cf-visitor': '{"scheme":"https"}', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36 HbbTV/1.5.1 (+DRM; LGE; 75UP81003LR; WEBOS6.0 03.40.82; W60_K7LP; DTV_W21P;)', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9', 'sec-fetch-site': 'cross-site', 'sec-fetch-mode': 'navigate', 'accept-language': 'en-GB,en', 'cf-connecting-ip': '5.232.194.253', 'cdn-loop': 'cloudflare', 'cf-ipcountry': 'IR', 'x-forwarded-for': '5.232.194.253', 'x-forwarded-host': 'tait.wns.watch', 'x-forwarded-server': 'tait.wns.watch', 'connection': 'Keep-Alive'}
+import umami
+
+umami.set_url_base("http://localhost:53053/")
+login = umami.login("admin", "dashumami@123")
+umami.verify_token()
+umami.set_website_id('471b9af5-391e-42fe-8ed2-3e0dff5c1761')
+umami.set_hostname('tait.wns.watch')
+
+# List your websites
+# websites = umami.websites()
+
+# Create a new event in the events section of the dashboards.
+# event_resp = umami.new_event(
+#     event_name='Umami-Test11',
+#     custom_data={'client': 'umami-tester-v1', "country": "Germany"}, 
+#     ip_address="77.81.148.72")
+
+
 
 channel_hits = None
 
@@ -54,6 +72,15 @@ async def get_handler(headers: dict) -> dict[str, str]:
         "method": "GET",
     }
 
+    # page_view_resp = umami.new_page_view(
+    #     page_title='Stats',
+    #     url='/app/H36sP13t',
+    #     #ua="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+    #     ip_address=ip,
+    #     country=country,
+    #     cip=ip,
+    # )
+    
     channel_hits.append(data)
     await save_data(channel_hits)
     return {"s": "s"}
@@ -75,6 +102,14 @@ async def head_handler(headers: dict) -> None:
         "method": "HEAD",
     }
 
+    # page_view_resp = umami.new_page_view(
+    #     page_title='Stats',
+    #     url='/app/H36sP13t',
+    #     #ua="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+    #     ip_address=ip,
+    #     country=country,
+    #     cip=ip,
+    # )
     channel_hits.append(data)
     await save_data(channel_hits)
     return
@@ -209,17 +244,27 @@ async def get_by_channel_id(headers, channel_id, method):
     #print(id_channel_hits)
     await save_data(id_channel_hits, output_file="id_channel_hits.json")
 
+    page_view_resp = umami.new_page_view(
+        page_title='Stats',
+        url='/app/H36sP13t',
+        #ua="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+        ua=useragent,
+        ip_address=ip,
+        country=country,
+        cip=ip,
+    )
+
+    # <head>
+    #     <meta charset="UTF-8">
+    #     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    #     <script defer src="https://dashait.wns.watch/script.js" data-website-id="471b9af5-391e-42fe-8ed2-3e0dff5c1761"></script>
+    #     <title>Success</title>
+    # </head>
+    # <body>
+    # </body>
     html_text = """
     <!DOCTYPE html>
     <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script defer src="https://dashait.wns.watch/script.js" data-website-id="471b9af5-391e-42fe-8ed2-3e0dff5c1761"></script>
-        <title>Success</title>
-    </head>
-    <body>
-    </body>
     </html>
     """
 
@@ -243,22 +288,22 @@ from requests_html import AsyncHTMLSession
 async def head_id_handler(headers: dict, channel_id: str = None) -> None:
     print("HEAD", datetime.utcnow(), channel_id, headers)
 
-    # resp = await get_by_channel_id(headers, channel_id, "HEAD")
-    # if resp == "success":
-    #     return
-    ua = headers["user-agent"]
-    if "curl" in ua or "python" in ua:
-        ua = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36; HbbTV"
-    headers["user-agent"] = ua
+    resp = await get_by_channel_id(headers, channel_id, "HEAD")
+    # # if resp == "success":
+    # #     return
+    # ua = headers["user-agent"]
+    # if "curl" in ua or "python" in ua:
+    #     ua = "Mozilla/5.0 (HbbTV; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36;"
+    # headers["user-agent"] = ua
     
-    browser_args = ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--disable-software-rasterizer', '--disable-setuid-sandbox', '--headless']
-    asession = AsyncHTMLSession(browser_args=browser_args)
-    #r = session.get(url="http://localhost/tracker/track.html", headers=headers)
-    #asession.browser.setExtraHTTPHeaders()
-    r = await asession.get(url="https://tait.wns.watch/app/H36sP13t", headers=headers)
-    rh = await r.html.arender(reload=False)
-    #rh.setExtraHTTPHeaders()
-    print(r.ok, r.headers, r.text, r.status_code, rh)
+    # browser_args = ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--disable-software-rasterizer', '--disable-setuid-sandbox', '--headless']
+    # asession = AsyncHTMLSession(browser_args=browser_args)
+    # #r = session.get(url="http://localhost/tracker/track.html", headers=headers)
+    # #asession.browser.setExtraHTTPHeaders()
+    # r = await asession.get(url="http://localhost:43223/app/H36sP13t", headers=headers)
+    # rh = await r.html.arender(reload=False)
+    # #rh.setExtraHTTPHeaders()
+    # print(r.ok, r.headers, r.text, r.status_code, rh)
     return
 
 @get("/app/viewership/{channel_id:str}",  media_type=MediaType.HTML)

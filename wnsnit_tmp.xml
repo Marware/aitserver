@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsduck>
+  <NIT version="3" current="true" network_id="0x0001" actual="[[ACTUAL]]">
+    <metadata PID="16"/>
+    <network_name_descriptor network_name="Wide Network Solutions"/>
+    <transport_stream transport_stream_id="0x0001" original_network_id="0x0001" preferred_section="0">
+      <service_list_descriptor>
+        <!-- <service service_id="0x0170" service_type="0x19"/> -->
+        [[NIT_SERVICES]]
+      </service_list_descriptor>
+      <private_data_specifier_descriptor private_data_specifier="NorDig"/>
+      <nordig_logical_channel_descriptor_v1>
+        <!-- <service service_id="0x0166" logical_channel_number="1" visible_service="true"/> -->
+        [[NIT_LOGICAL_SERVICES]]
+      </nordig_logical_channel_descriptor_v1>
+    </transport_stream>
+  </NIT>
+  </tsduck>

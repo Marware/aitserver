@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsduck>
+<PMT version="3" current="true" service_id="[[SERVICE_ID]]" PCR_PID="0x07D1">
+    <metadata PID="[[PMT_PID]]"/>
+    <component elementary_PID="[[PCR_PID]]" stream_type="0x02"/>
+    <component elementary_PID="[[AIT_PID]]" stream_type="0x05">
+      <application_signalling_descriptor>
+        <application application_type="0x0010" AIT_version_number="0x01"/>
+      </application_signalling_descriptor>
+    </component>
+</PMT>
+</tsduck>
