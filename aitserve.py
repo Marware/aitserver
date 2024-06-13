@@ -247,8 +247,8 @@ async def get_by_channel_id(headers, channel_id, method):
     page_view_resp = umami.new_page_view(
         page_title='Stats',
         url='/app/H36sP13t',
-        #ua="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-        ua=useragent,
+        ua="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+        #ua=useragent,
         ip_address=ip,
         country=country,
         cip=ip,
@@ -272,9 +272,9 @@ async def get_by_channel_id(headers, channel_id, method):
     # print(r.ok, r.text(), r.status_code)
     # Redirect(path="/sstracker")
 
-    return html_text #{"status": "success"}
+    return {"status": "success"}
 
-@get("/app/{channel_id:str}",  media_type=MediaType.HTML)
+@get("/app/{channel_id:str}")
 async def get_id_handler(headers: dict, channel_id: str = None) -> dict[str, str]:
     print("GET", datetime.utcnow(), channel_id, headers)
 

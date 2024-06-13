@@ -25,7 +25,8 @@ Iran International,1420,14
 FX 1 HD,1610,16
 FX 2 HD,2310,23
 Iran International HD,3310,33
-FX 1 HD,1910,19"""
+FX 1 HD,1910,19
+AVAFAMILY,1817,366"""
 
 def replacer(table, key, val):
 
@@ -122,8 +123,8 @@ for n in l:
     for k, v in ait_dic.items():
         ait = replacer(ait, k, v)
 
-    # reg = "--inter-packet 1000"
-    reg = "--bitrate 5000000"
+    reg = "--inter-packet 1000"
+    #reg = "--bitrate 5000000"
     # print(pmt)
     # print(ait)
     # continue
@@ -165,14 +166,14 @@ with open(nit_file, "w") as f:
 # with open(nit_file_other, "w") as f:
 #     f.write(nitf_other)
 
-pcmds = f" -P inject -p 0 {reg} --xml {pat_file} " + pcmds
-pcmds = f" -P inject -p 17 {reg} --xml {sdt_file} " + pcmds
+pcmds = f" -P inject -p 0 --replace --xml {pat_file} " + pcmds
+pcmds = f" -P inject -p 17 --replace --xml {sdt_file} " + pcmds
 
-pcmds += f" -P inject -p 16 {reg} --xml {nit_file} "
+pcmds += f" -P inject -p 16 --replace --xml {nit_file} "
 #pcmds += f" -P inject -p 16 --inter-packet 1000 --xml {nit_file_other} "
 
-tsp_cmd = f"tsp --bitrate 30000000 --max-flushed-packets 70 -I null 10000 -P regulate --packet-burst 14 {pcmds} -O file tsout.ts"
-
+# tsp_cmd = f"tsp --bitrate 30000000 --max-flushed-packets 70 -I null 10000 -P regulate --packet-burst 14 {pcmds} -O file tsout.ts"
+tsp_cmd = f"tsp --add-input-stuffing 50/130 -I file ../wnsait3.ts -P regulate --packet-burst 14 {pcmds} -O file tsout.ts"
 print(tsp_cmd)
 
 """
